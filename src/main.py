@@ -1,10 +1,13 @@
 import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib.animation as ani
+from populationEnv import PopulationEnv
 
-fig = plt.figure()
-axes = fig.add_subplot(111, projection="3d")
-axes.grid(False)
+popEnv = PopulationEnv()
 
-plt.show()
+def main():
+    
+    plt.show()
+    
 
+main()
