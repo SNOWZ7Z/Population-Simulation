@@ -2,7 +2,10 @@
 ENVIRONMENT = {
     # Environment parameters
     'food_spwn': 20, #per day
-    'danger_spwn': 10, #per day
+    'danger_spwn': 10, #per day\
+    'width': 15,
+    'height': 15,
+    'depth': 15,
 }
 
 BLUE_POPULATION = {
