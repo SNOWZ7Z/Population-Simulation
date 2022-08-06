@@ -1,34 +1,21 @@
-from contextlib import redirect_stderr
 import matplotlib.pyplot as plt
 import matplotlib.animation as ani
 import numpy as np
+import populationParams as params
 
-ENVIRONMENT = {
-    # Environment parameters
-    'food_spwn': 20, #per day
-    'danger_spwn': 10, #per day
-}
-
-BLUE_POPULATION = {
-    'surv': 0.95, #Survival rate
-    'reprd': 0.4, #Reproduction rate
-    'gene': 1, #Gene Dominance
-    'endurance': 2, #Endurance
-    'max_age': 30, #Max age
-}
-
-RED_POPULATION = {
-    'surv': 0.35, #Survival rate
-    'reprd': 0.9, #Reproduction rate
-    'gene': 2, #Gene Dominance
-    'endurance': 1, #Endurance
-    'max_age': 60, #Max age
-}
-
+#General data
+day = 0
 
 class PopulationEnv():
+
     def __init__(self):
 
         fig = plt.figure()
         axes = fig.add_subplot(111, projection="3d")
         axes.grid(False)
+        axes.set_xticklabels([])
+        axes.set_yticklabels([])
+        axes.set_zticklabels([])
+        axes.text2D(0.45, 0.999, ("Day" + str(day)), transform=axes.transAxes)
+
+        # day_text = axes.annotate("Day 0", xy=[np.pi / 2, 1], ha="center", va="bottom")
