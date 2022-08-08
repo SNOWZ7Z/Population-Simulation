@@ -5,13 +5,6 @@ from populationEnv import PopulationEnv
 
 popEnv = PopulationEnv()
 
-def main():
-    
-    plt.show()
-    
-
-main()
-
 # https://github.com/kiteco/python-youtube-code/blob/master/virus-spreading-visualization/virus.py
 # https://matplotlib.org/stable/plot_types/index.html
 # https://www.youtube.com/watch?v=KAmZe5D3v5I&t=623s
