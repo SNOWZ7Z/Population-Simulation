@@ -16,10 +16,9 @@ class PopulationEnv():
 
     def generate_data(self, nbr_iterations, nbr_elements):
         """
-        Generates dummy data.
         The elements will be assigned random initial positions and speed.
         Args:
-        nbr_iterations (int): Number of iterations data needs to be generated for.
+        nbr_iterations (int): Number of iterations data needs to be generated for. Aka length of the animation.
         nbr_elements (int): Number of elements (or points) that will move.
         Returns:
         list: list of positions of elements. (Iterations x (# Elements x Dimensions))
@@ -29,16 +28,32 @@ class PopulationEnv():
         # Random initial positions.
         gaussian_mean = np.zeros(dims)
         gaussian_std = np.ones(dims)
+
+        #Vectorizer for parsing to int
+        vector = np.vectorize(int)
+        
         start_positions = np.array(list(map(np.random.normal, gaussian_mean, gaussian_std, [nbr_elements] * dims[0]))).T
+        start_positions = vector(start_positions)
 
         # Random speed
+        # X is horizontal, Y is depth, Z is vertical (For manual manipulation) of the speed values (Mental Note only)
         start_speed = np.array(list(map(np.random.normal, gaussian_mean, gaussian_std, [nbr_elements] * dims[0]))).T
+        # start_speed = np.array([[-1,0,0] * nbr_elements]).T
 
         # Computing trajectory
         data = [start_positions]
+
+        #TODO Change for a While True so it's infinite
         for iteration in range(nbr_iterations):
             previous_positions = data[-1]
             new_positions = previous_positions + start_speed
+            for i in range(nbr_elements):
+                for j in range(3):
+                    if new_positions[i][j] >= 50:
+                        start_speed[i][j] = -abs(start_speed[i][j])
+                    elif new_positions[i][j] <= -50:
+                        start_speed[i][j] = abs(start_speed[i][j])
+                        # new_positions[i][j] = 50
             data.append(new_positions)
 
         return data   
@@ -81,8 +96,8 @@ class PopulationEnv():
         # axes.scatter(rnd.randint(0,16), rnd.randint(0,16), rnd.randint(0,16), color=blue_people, marker='o')
 
         #This is sectioned so that the data generated is only used for one color.    
-        data_g = self.generate_data(100, 15)
-        data_b = self.generate_data(100, 15)
+        data_g = self.generate_data(1000, 3)
+        data_b = self.generate_data(1000, 3)
 
         iterations_g = len(data_g)
         iterations_b = len(data_b)
