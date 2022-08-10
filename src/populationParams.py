@@ -6,6 +6,7 @@ ENVIRONMENT = {
     'width': 15,
     'height': 15,
     'depth': 15,
+    'max_pop': 200,
 }
 
 BLUE_POPULATION = {

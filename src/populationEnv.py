@@ -3,7 +3,7 @@ import matplotlib.pyplot as plt
 import matplotlib.animation as ani
 import numpy as np
 import populationParams as params
-import random as rnd
+import random
 
 #General data
 day = 0
@@ -13,6 +13,21 @@ blue_people = 'b'
 green_people = 'g'
 
 class PopulationEnv():
+
+    def dies(self) -> bool:
+        """
+        Returns:
+            bool: True if the creature dies, False if they die.
+        """
+        #TODO change to a 10% chance of dying
+        return np.random.randint(0,10) == 1
+    
+    def isBorn(self) -> bool:
+        """
+        Returns:
+            bool: True if the creature is born, False if it is not.
+        """
+        return np.random.randint(0,10) == 1
 
     def generate_data(self, nbr_iterations, nbr_elements):
         """
@@ -38,26 +53,39 @@ class PopulationEnv():
         # Random speed
         # X is horizontal, Y is depth, Z is vertical (For manual manipulation) of the speed values (Mental Note only)
         start_speed = np.array(list(map(np.random.normal, gaussian_mean, gaussian_std, [nbr_elements] * dims[0]))).T
+
+        
         # start_speed = np.array([[-1,0,0] * nbr_elements]).T
 
         # Computing trajectory
         data = [start_positions]
 
-        #TODO Change for a While True so it's infinite
+        #TODO Change for a Big period of time.
         for iteration in range(nbr_iterations):
+
             previous_positions = data[-1]
             new_positions = previous_positions + start_speed
-            for i in range(nbr_elements):
+            for i in range(nbr_elements):#Code for bounce off walls
                 for j in range(3):
                     if new_positions[i][j] >= 50:
                         start_speed[i][j] = -abs(start_speed[i][j])
                     elif new_positions[i][j] <= -50:
                         start_speed[i][j] = abs(start_speed[i][j])
-                        # new_positions[i][j] = 50
+                # if self.dies():
+                #     new_positions = np.delete(new_positions, i)
+
+            #TODO make it grab a random creature, not the first one Same for born
+            if self.dies():
+                new_positions[0][0] += 199  #Sends the creature to oblivion if it dies.
+
+            if self.isBorn():
+                print(new_positions)
+                new_positions[0][0] = 0
+
             data.append(new_positions)
 
         return data   
-
+    
     def animate_scatters(self, iteration, data, scatters):
         """
         Update the data held by the scatter plot and therefore animates it.
@@ -96,8 +124,8 @@ class PopulationEnv():
         # axes.scatter(rnd.randint(0,16), rnd.randint(0,16), rnd.randint(0,16), color=blue_people, marker='o')
 
         #This is sectioned so that the data generated is only used for one color.    
-        data_g = self.generate_data(1000, 3)
-        data_b = self.generate_data(1000, 3)
+        data_g = self.generate_data(100, 3)
+        data_b = self.generate_data(100, 3)
 
         iterations_g = len(data_g)
         iterations_b = len(data_b)
