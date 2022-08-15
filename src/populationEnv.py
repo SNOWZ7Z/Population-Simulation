@@ -7,10 +7,24 @@ import random
 
 #General data
 day = 0
+day_text = "Day 0"
 the_green_population = 0
 the_blue_population = 0
 blue_people = 'b'
 green_people = 'g'
+fig = plt.figure()
+axes = fig.add_subplot(projection="3d")
+text = axes.text2D(0.45, 0.999, (day_text), transform=axes.transAxes, fontsize=20)
+
+def update_day(event):
+    global day
+    global day_text
+    global text
+    day += 1
+    day_text = "Day " + str(day)   
+    text = axes.text2D(0.45, 0.999, (day_text), transform=axes.transAxes, fontsize=20)
+    print(day_text)
+
 
 class PopulationEnv():
 
@@ -39,7 +53,8 @@ class PopulationEnv():
         list: list of positions of elements. (Iterations x (# Elements x Dimensions))
         """
         dims = (3,1)
-
+        global day
+        
         # Random initial positions.
         gaussian_mean = np.zeros(dims)
         gaussian_std = np.ones(dims)
@@ -79,8 +94,7 @@ class PopulationEnv():
                 new_positions[0][0] += 199  #Sends the creature to oblivion if it dies.
 
             if self.isBorn():
-                print(new_positions)
-                new_positions[0][0] = 0
+                new_positions[0][0] = 0 #It's changing the positions of thew X position only
 
             data.append(new_positions)
 
@@ -101,8 +115,11 @@ class PopulationEnv():
         return scatters
       
     def __init__(self):
-        fig = plt.figure()
-        axes = fig.add_subplot(projection="3d")
+        global day_text
+        global axes
+        global fig
+        # fig = plt.figure()
+        # axes = fig.add_subplot(projection="3d")
         
         # Style the environment
         axes.grid(False)
@@ -115,7 +132,15 @@ class PopulationEnv():
         # axes.set_zticklabels([])
         
         # Add labels to the axes
-        axes.text2D(0.45, 0.999, ("Day" + str(day)), transform=axes.transAxes, fontsize=20)
+        # text = axes.text2D(0.45, 0.999, (day_text), transform=axes.transAxes, fontsize=20)
+       
+
+        fig.canvas.mpl_connect('button_press_event', update_day)
+        fig.canvas.draw()
+
+        animation = ani.ArtistAnimation(fig, [(text,)])
+
+        #This will need an independent generate data for each population        
         axes.text2D(0.10, 0.1, ("The Green: " + str(the_green_population)), transform=axes.transAxes, color=green_people)
         axes.text2D(0.80, 0.1, ("The Blue: " + str(the_blue_population)), transform=axes.transAxes, color=blue_people)
 
