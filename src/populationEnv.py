@@ -152,18 +152,26 @@ class PopulationEnv():
         data_g = self.generate_data(100, 3)
         data_b = self.generate_data(100, 3)
 
+        full_data = np.concatenate((data_g, data_b), axis=0)
+
         iterations_g = len(data_g)
         iterations_b = len(data_b)
+        full_iterations = iterations_g + iterations_b
 
         scatters_green_people = [ axes.scatter(data_g[0][i,0:1], data_g[0][i,1:2], data_g[0][i,2:], color=green_people) for i in range(data_g[0].shape[0]) ]
         scatters_blue_people = [ axes.scatter(data_b[0][i,0:1], data_b[0][i,1:2], data_b[0][i,2:], color=blue_people) for i in range(data_b[0].shape[0]) ]
+
+        full_scatters = np.concatenate((scatters_blue_people, scatters_green_people), axis=0)
         
-        animation_g = ani.FuncAnimation(fig, self.animate_scatters, iterations_g, fargs=(data_g, scatters_green_people), interval=50, blit=False, repeat=True)
-        animation_b = ani.FuncAnimation(fig, self.animate_scatters, iterations_b, fargs=(data_b, scatters_blue_people), interval=50, blit=False, repeat=True)
-        
+        # animation_g = ani.FuncAnimation(fig, self.animate_scatters, iterations_g, fargs=(data_g, scatters_green_people), interval=50, blit=False, repeat=True)
+        # animation_b = ani.FuncAnimation(fig, self.animate_scatters, iterations_b, fargs=(data_b, scatters_blue_people), interval=50, blit=False, repeat=True)
+        # animation_xd = animation_g + animation_b
+        animation = ani.FuncAnimation(fig, self.animate_scatters, full_iterations, fargs=(full_data, full_scatters), interval=50, blit=False, repeat=True)
+
+
         plt.rcParams['animation.ffmpeg_path'] ='C:\\PATH_Programs/ffmpeg.exe'
         FFwriter=ani.FFMpegWriter(fps=40, extra_args=['-vcodec', 'libx264'])
-        animation_g.save('animation.mp4', writer=FFwriter)
+        animation.save('animation.mp4', writer=FFwriter)
 
         plt.show()
         
