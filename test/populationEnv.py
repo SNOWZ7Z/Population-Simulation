@@ -87,7 +87,7 @@ def animate_sctrs(iteration, data, scatters):
       print("Current index: " + str(i))
 
 
-   animation = ani.FuncAnimation(fig, animate_sctrs, full_iterations, fargs=(full_data, full_scatters), interval=50, blit=False, repeat=True)
+   animation = ani.FuncAnimation(fig, animate_sctrs, iteration, fargs=(data, scatters), interval=50, blit=False, repeat=True)
    return scatters
 
 data1 = generate_data(4, 2)
@@ -118,8 +118,8 @@ axes.text2D(0.80, 0.1, ("The Blue: " + str(the_blue_population)), transform=axes
 # axes.scatter(rnd.randint(0,16), rnd.randint(0,16), rnd.randint(0,16), color=blue_people, marker='o')
 
 #This is sectioned so that the data generated is only used for one color.    
-data_g = generate_data(100, 30)
-data_b = generate_data(100, 30)
+data_g = generate_data(10, 3)
+data_b = generate_data(10, 3)
 
 full_data = np.concatenate((data_g, data_b), axis=0)
 
@@ -138,7 +138,7 @@ print(full_scatters)
 # animation_g = ani.FuncAnimation(fig, self.animate_scatters, iterations_g, fargs=(data_g, scatters_green_people), interval=50, blit=False, repeat=True)
 # animation_b = ani.FuncAnimation(fig, self.animate_scatters, iterations_b, fargs=(data_b, scatters_blue_people), interval=50, blit=False, repeat=True)
 # animation_xd = animation_g + animation_b
-animation = ani.FuncAnimation(fig, animate_scatters, iterations_g, fargs=(full_data, full_scatters, data_b, scatters_blue_people), interval=50, blit=False, repeat=True)
+animation = ani.FuncAnimation(fig, animate_scatters, iterations_g, fargs=(data_g, scatters_green_people, data_b, scatters_blue_people), interval=50, blit=False, repeat=True)
 
 plt.rcParams['animation.ffmpeg_path'] ='C:\\PATH_Programs/ffmpeg.exe'
 FFwriter=ani.FFMpegWriter(fps=40, extra_args=['-vcodec', 'libx264'])

@@ -100,7 +100,7 @@ class PopulationEnv():
 
         return data   
     
-    def animate_scatters(self, iteration, data, scatters):
+    def animate_scatters(self, iteration, data, scatters, data2, scatters2):
         """
         Update the data held by the scatter plot and therefore animates it.
         Args:
@@ -112,6 +112,18 @@ class PopulationEnv():
         """
         for i in range(data[0].shape[0]):
             scatters[i]._offsets3d = (data[iteration][i,0:1], data[iteration][i,1:2], data[iteration][i,2:])
+        self.animate_sctrs(iteration, data2, scatters2)
+        return scatters
+
+    def animate_sctrs(self, iteration, data, scatters):
+        print("Scatters: " + str(len(scatters)))
+        print("Data: " + str(len(data)))
+        print("Iteration: " + str(len(data[iteration])))
+        
+        for i in range(data[0].shape[0]):
+            scatters[i]._offsets3d = (data[iteration][i,0:1], data[iteration][i,1:2], data[iteration][i,2:])
+            print("Current index: " + str(i))
+        animation = ani.FuncAnimation(fig, self.animate_sctrs, iteration, fargs=(data, scatters), interval=50, blit=False, repeat=True)
         return scatters
       
     def __init__(self):
@@ -166,7 +178,7 @@ class PopulationEnv():
         # animation_g = ani.FuncAnimation(fig, self.animate_scatters, iterations_g, fargs=(data_g, scatters_green_people), interval=50, blit=False, repeat=True)
         # animation_b = ani.FuncAnimation(fig, self.animate_scatters, iterations_b, fargs=(data_b, scatters_blue_people), interval=50, blit=False, repeat=True)
         # animation_xd = animation_g + animation_b
-        animation = ani.FuncAnimation(fig, self.animate_scatters, full_iterations, fargs=(full_data, full_scatters), interval=50, blit=False, repeat=True)
+        animation = ani.FuncAnimation(fig, self.animate_scatters, iterations_g, fargs=(data_g, scatters_green_people, data_b, scatters_blue_people), interval=50, blit=False, repeat=True)
 
 
         plt.rcParams['animation.ffmpeg_path'] ='C:\\PATH_Programs/ffmpeg.exe'
