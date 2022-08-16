@@ -88,9 +88,9 @@ def main(data, save=True):
                                        interval=50, blit=False, repeat=True)
 
     
-    anim_writer = animation.MovieWriter(fps=40, metadata=dict(artist='Marcelo Geldres'), bitrate=1800)
-    # writer = Writer(fps=30, metadata=dict(artist='Me'), bitrate=1800, extra_args=['-vcodec', 'libx264'])
-    ani.save('3d-scatted-animated.mp4', writer=anim_writer)
+    plt.rcParams['animation.ffmpeg_path'] ='C:\\PATH_Programs/ffmpeg.exe'
+    FFwriter=animation.FFMpegWriter(fps=40, extra_args=['-vcodec', 'libx264'])
+    ani.save('animation.mp4', writer=FFwriter)
 
     plt.show()
 

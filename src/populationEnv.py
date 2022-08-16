@@ -161,8 +161,9 @@ class PopulationEnv():
         animation_g = ani.FuncAnimation(fig, self.animate_scatters, iterations_g, fargs=(data_g, scatters_green_people), interval=50, blit=False, repeat=True)
         animation_b = ani.FuncAnimation(fig, self.animate_scatters, iterations_b, fargs=(data_b, scatters_blue_people), interval=50, blit=False, repeat=True)
         
-        writervideo = ani.FFMpegWriter(fps=40) 
-        animation_g.save('green_people.mp4', writer=writervideo)
+        plt.rcParams['animation.ffmpeg_path'] ='C:\\PATH_Programs/ffmpeg.exe'
+        FFwriter=ani.FFMpegWriter(fps=40, extra_args=['-vcodec', 'libx264'])
+        animation_g.save('animation.mp4', writer=FFwriter)
 
         plt.show()
         
