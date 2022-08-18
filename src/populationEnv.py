@@ -47,6 +47,7 @@ class PopulationEnv():
         # X is horizontal, Y is depth, Z is vertical (For manual manipulation) of the speed values (Mental Note only)
         start_speed = np.array(list(map(np.random.normal, gaussian_mean, gaussian_std, [nbr_elements] * dims[0]))).T
         
+        #A portion of the elements will not be shown in the beguinng of the animation.
         for i in range(nbr_elements):
             if i <= (nbr_iterations/4):
                 start_positions[i][0] += 400
@@ -70,10 +71,8 @@ class PopulationEnv():
                         start_speed[i][j] = abs(start_speed[i][j])
                     elif new_positions[i][j] <= -200:
                         start_speed[i][j] = -abs(start_speed[i][j])   
-                # if self.dies():
-                #     new_positions = np.delete(new_positions, i)
 
-            # print("Number of elements: " + str(nbr_elements))
+            #Random Pickers for creatures who die are created
             rand_picker = np.random.randint(nbr_elements)
             rand_v_picker = np.random.randint(3)
 
@@ -91,10 +90,10 @@ class PopulationEnv():
                 if params.g_isBorn():
                     new_positions[rand_picker][rand_v_picker] = 0
 
-
             data.append(new_positions)
         return data   
     
+    #Animation of the scatter points
     def animate_scatters(self, iteration, data, scatters, data2, scatters2):
         """
         Update the data held by the scatter plot and therefore animates it.
@@ -110,8 +109,16 @@ class PopulationEnv():
         self.animate_sctrs(iteration, data2, scatters2)
         return scatters
 
+    #Second animation of the scatter points that is triggered by the first one. animate_scatters
     def animate_sctrs(self, iteration, data, scatters):
-        
+        """
+        This animation is triggered by the first one.
+        Args:
+            iteration (int): Current iteration of the animation
+            data (list): List of the data positions at each iteration.
+            scatters (list): List of all the scatters (One per element)
+        Returns: updated scatters
+        """
         for i in range(data[0].shape[0]):
             scatters[i]._offsets3d = (data[iteration][i,0:1], data[iteration][i,1:2], data[iteration][i,2:])
         animation = ani.FuncAnimation(fig, self.animate_sctrs, iteration, fargs=(data, scatters), interval=50, blit=False, repeat=True)
@@ -120,8 +127,6 @@ class PopulationEnv():
     def __init__(self):
         global axes
         global fig
-        # fig = plt.figure()
-        # axes = fig.add_subplot(projection="3d")
         
         # Style the environment
         axes.grid(False)
@@ -133,41 +138,28 @@ class PopulationEnv():
         axes.set_yticklabels([])
         axes.set_zticklabels([])
         
-        # Add labels to the axes
-        # text = axes.text2D(0.45, 0.999, (day_text), transform=axes.transAxes, fontsize=20)
-
-        #This will need an independent generate data for each population        
-        # axes.text2D(0.10, 0.1, ("The Green: " + str(the_green_population)), transform=axes.transAxes, color=green_people)
-        # axes.text2D(0.80, 0.1, ("The Blue: " + str(the_blue_population)), transform=axes.transAxes, color=blue_people)
-
         #This is sectioned so that the data generated is only used for one color.    
         data_g = self.generate_data(iterations_anim, nbr_creatures, 'g')
         data_b = self.generate_data(iterations_anim, nbr_creatures, 'b')
 
-        full_data = np.concatenate((data_g, data_b), axis=0)
-
+        #Nunber of iterations is the length of the animation.
         iterations_g = len(data_g)
         iterations_b = len(data_b)
-        full_iterations = iterations_g + iterations_b
 
+        #Creating the scatter points for the g creatures
         scatters_green_people = [ axes.scatter(data_g[0][i,0:1], data_g[0][i,1:2], data_g[0][i,2:], color=green_people) for i in range(data_g[0].shape[0]) ]
         scatters_blue_people = [ axes.scatter(data_b[0][i,0:1], data_b[0][i,1:2], data_b[0][i,2:], color=blue_people) for i in range(data_b[0].shape[0]) ]
-
-        full_scatters = np.concatenate((scatters_blue_people, scatters_green_people), axis=0)
         
-        # animation_g = ani.FuncAnimation(fig, self.animate_scatters, iterations_g, fargs=(data_g, scatters_green_people), interval=50, blit=False, repeat=True)
-        # animation_b = ani.FuncAnimation(fig, self.animate_scatters, iterations_b, fargs=(data_b, scatters_blue_people), interval=50, blit=False, repeat=True)
-        # animation_xd = animation_g + animation_b
+        #Animation of the scatter points
         animation = ani.FuncAnimation(fig, self.animate_scatters, iterations_g, fargs=(data_g, scatters_green_people, data_b, scatters_blue_people), interval=50, blit=False, repeat=True)
 
-
-
-
+        #Saving the animation to a file
         plt.rcParams['animation.ffmpeg_path'] ='C:\\PATH_Programs/ffmpeg.exe'
         FFwriter=ani.FFMpegWriter(fps=30, extra_args=['-vcodec', 'libx264'])
         animation.save('animation.mp4', writer=FFwriter)
 
-        plt.show()
+        #This line can be  shown if the user wishes to visualize the animation. (It is not shown by default) (It runs slower, at the cpu's capacity)
+        # plt.show()
         
         
 
