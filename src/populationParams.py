@@ -1,26 +1,41 @@
-#Here all the parameters for the population are defined
-ENVIRONMENT = {
-    # Environment parameters
-    'food_spwn': 20, #per day
-    'danger_spwn': 10, #per day\
-    'width': 15,
-    'height': 15,
-    'depth': 15,
-    'max_pop': 200,
-}
+import numpy as np
 
 BLUE_POPULATION = {
-    'surv': 0.95, #Survival rate
-    'reprd': 0.4, #Reproduction rate
-    'gene': 1, #Gene Dominance
-    'endurance': 2, #Endurance
-    'max_age': 30, #Max age
+    'death': 20, #divide by 10 to get the chance of death
+    'born': 10, #divide by 10 to get the chance of birth
 }
 
-RED_POPULATION = {
-    'surv': 0.35, #Survival rate
-    'reprd': 0.9, #Reproduction rate
-    'gene': 2, #Gene Dominance
-    'endurance': 1, #Endurance
-    'max_age': 60, #Max age
+GREEN_POPULATION = {
+    'death': 3, #divide by 10 to get the chance of death
+    'born': 3, #divide by 10 to get the chance of birth
 }
+
+def b_dies() -> bool:
+    """
+    Returns:
+        bool: True if the creature dies, False if they die.
+    """
+    #TODO change to a 10% chance of dying
+    return np.random.randint(0,BLUE_POPULATION["death"]) == 1
+
+def g_dies() -> bool:
+    """
+    Returns:
+        bool: True if the creature dies, False if they die.
+    """
+    #TODO change to a 10% chance of dying
+    return np.random.randint(0,GREEN_POPULATION["death"]) == 1
+
+def b_isBorn() -> bool:
+    """
+    Returns:
+        bool: True if the creature is born, False if it is not.
+    """
+    return np.random.randint(0,BLUE_POPULATION["born"]) == 1
+
+def g_isBorn() -> bool:
+    """
+    Returns:
+        bool: True if the creature is born, False if it is not.
+    """
+    return np.random.randint(0,GREEN_POPULATION["born"]) == 1
